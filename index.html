@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="一个兼具高级个人品牌感与技术博客结构的个人网站。"
+    />
+    <title>你的名字 - 技术与作品</title>
+    <link rel="preload" href="./styles.css" as="style" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#work">跳到主要内容</a>
+    <header class="site-header" data-elevated="false">
+      <a class="brand" href="#top" aria-label="回到首页">
+        <span class="brand-mark">YN</span>
+        <span>你的名字</span>
+      </a>
+      <nav class="nav" aria-label="主导航">
+        <a href="#work" data-section-link="work">项目</a>
+        <a href="#writing" data-section-link="writing">文章</a>
+        <a href="#notes" data-section-link="notes">笔记</a>
+        <a href="#contact" data-section-link="contact">联系</a>
+      </nav>
+    </header>
+
+    <main id="top">
+      <section class="hero" aria-labelledby="hero-title">
+        <canvas class="signal-canvas" aria-hidden="true"></canvas>
+        <div class="hero-copy">
+          <p class="eyebrow"><span class="live-dot" aria-hidden="true"></span>Independent developer / Technical writer</p>
+          <h1 id="hero-title">
+            <span>把复杂系统</span>
+            <span>写清楚，</span>
+            <span>也把想法</span>
+            <span>做成产品。</span>
+          </h1>
+          <p class="hero-intro">
+            我关注工程效率、AI 应用、产品设计和长期写作。这里收集我的项目、技术文章、实验记录与正在形成的方法论。
+          </p>
+          <div class="hero-tags" aria-label="关注方向">
+            <span>AI Workflow</span>
+            <span>Engineering Systems</span>
+            <span>Product Thinking</span>
+          </div>
+          <div class="hero-actions" aria-label="主要操作">
+            <a class="button primary" href="#writing">阅读文章</a>
+            <a class="button secondary" href="#work">查看项目</a>
+          </div>
+        </div>
+
+        <aside class="portrait-panel" aria-label="个人信息摘要">
+          <div class="portrait-shell">
+            <img
+              src="./assets/profile-placeholder.svg"
+              alt="个人头像占位图"
+              class="portrait"
+              width="520"
+              height="640"
+            />
+            <div class="portrait-readout" aria-hidden="true">
+              <span>BUILD LOG</span>
+              <strong>2026.06</strong>
+            </div>
+          </div>
+          <div class="availability">
+            <span class="status-dot" aria-hidden="true"></span>
+            <span>开放远程协作 / 咨询 / 写作合作</span>
+          </div>
+        </aside>
+      </section>
+
+      <div class="ticker" aria-label="关注领域">
+        <div class="ticker-track">
+          <span>AI WORKFLOW</span>
+          <span>SYSTEM DESIGN</span>
+          <span>TECHNICAL WRITING</span>
+          <span>PRODUCT SENSE</span>
+          <span>AUTOMATION</span>
+          <span>KNOWLEDGE OPS</span>
+          <span>AI WORKFLOW</span>
+          <span>SYSTEM DESIGN</span>
+          <span>TECHNICAL WRITING</span>
+          <span>PRODUCT SENSE</span>
+          <span>AUTOMATION</span>
+          <span>KNOWLEDGE OPS</span>
+        </div>
+      </div>
+
+      <section class="section split-section" aria-labelledby="about-title">
+        <div>
+          <p class="section-kicker">Profile</p>
+          <h2 id="about-title">一个偏工程、偏产品、也偏写作的人。</h2>
+        </div>
+        <div class="prose">
+          <p>
+            这里可以换成你的真实介绍：你做过什么、擅长什么、现在关注什么，以及别人为什么应该信任你。
+            当前版本先保留清爽的个人品牌表达，后面可以扩展成简历、博客、知识库或项目展示站。
+          </p>
+          <div class="metrics" aria-label="关键数据">
+            <div>
+              <strong>8+</strong>
+              <span>年工程经验</span>
+            </div>
+            <div>
+              <strong>30+</strong>
+              <span>项目沉淀</span>
+            </div>
+            <div>
+              <strong>120k</strong>
+              <span>文字记录</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="work" aria-labelledby="work-title">
+        <div class="section-heading">
+          <div>
+            <p class="section-kicker">Selected work</p>
+            <h2 id="work-title">精选项目</h2>
+          </div>
+          <a class="text-link" href="#contact">合作咨询</a>
+        </div>
+        <div class="work-grid">
+          <article class="work-item featured">
+            <div class="work-meta">AI 工具 / 2026</div>
+            <h3>个人知识工作台</h3>
+            <p>
+              把资料收集、写作、项目跟踪和复盘放到一个流畅的工作流中，用结构化笔记承接长期思考。
+            </p>
+            <a href="#contact" aria-label="联系了解个人知识工作台项目">联系了解</a>
+          </article>
+          <article class="work-item">
+            <div class="work-meta">工程效率 / 2025</div>
+            <h3>自动化交付脚本集</h3>
+            <p>面向日常开发、发布、排障的轻量脚本，减少重复操作，提高交付稳定性。</p>
+            <a href="#contact" aria-label="联系了解自动化交付脚本集项目">联系了解</a>
+          </article>
+          <article class="work-item dark">
+            <div class="work-meta">产品设计 / 2025</div>
+            <h3>技术博客信息架构</h3>
+            <p>围绕文章、项目、笔记、阅读清单建立内容层级，让个人网站可以长期生长。</p>
+            <a href="#contact" aria-label="联系了解技术博客信息架构项目">联系了解</a>
+          </article>
+        </div>
+      </section>
+
+      <section class="section writing-section" id="writing" aria-labelledby="writing-title">
+        <div class="section-heading">
+          <div>
+            <p class="section-kicker">Writing</p>
+            <h2 id="writing-title">技术文章</h2>
+          </div>
+          <div class="filter-group" aria-label="文章分类筛选">
+            <button class="filter-button is-active" type="button" data-filter="all" aria-pressed="true">全部</button>
+            <button class="filter-button" type="button" data-filter="engineering" aria-pressed="false">工程</button>
+            <button class="filter-button" type="button" data-filter="ai" aria-pressed="false">AI</button>
+            <button class="filter-button" type="button" data-filter="product" aria-pressed="false">产品</button>
+          </div>
+        </div>
+
+        <div class="article-list">
+          <article class="article-row" data-topic="engineering">
+            <time datetime="2026-06-01">2026.06</time>
+            <div>
+              <p class="article-topic">Engineering</p>
+              <h3><a href="#contact">大型遗留系统里，如何做一次可回滚的重构</a></h3>
+              <p>从边界识别、回归测试、提交粒度到风险控制，记录一次真实工程整理的工作方法。</p>
+            </div>
+          </article>
+          <article class="article-row" data-topic="ai">
+            <time datetime="2026-05-14">2026.05</time>
+            <div>
+              <p class="article-topic">AI</p>
+              <h3><a href="#contact">把 AI 当同事使用，而不是当搜索框使用</a></h3>
+              <p>关于上下文、任务拆解、验证闭环和产出质量的一些实践。</p>
+            </div>
+          </article>
+          <article class="article-row" data-topic="product">
+            <time datetime="2026-04-22">2026.04</time>
+            <div>
+              <p class="article-topic">Product</p>
+              <h3><a href="#contact">个人网站不是简历，而是一个长期信号系统</a></h3>
+              <p>如何用项目、文章、笔记和观点组合出更可信的个人表达。</p>
+            </div>
+          </article>
+          <article class="article-row" data-topic="engineering">
+            <time datetime="2026-03-09">2026.03</time>
+            <div>
+              <p class="article-topic">Engineering</p>
+              <h3><a href="#contact">从脚本到工具：什么时候值得抽象</a></h3>
+              <p>不是所有重复都值得平台化，先把真实约束看清楚。</p>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="section notes-section" id="notes" aria-labelledby="notes-title">
+        <div class="section-heading">
+          <div>
+            <p class="section-kicker">Notes</p>
+            <h2 id="notes-title">近期笔记</h2>
+          </div>
+        </div>
+        <div class="notes-grid">
+          <a class="note-card" href="#contact">
+            <span>01</span>
+            <h3>如何判断一个想法值得写成文章</h3>
+            <p>有反复出现的问题、有清晰反例、有可以迁移的方法。</p>
+          </a>
+          <a class="note-card" href="#contact">
+            <span>02</span>
+            <h3>我的工具箱</h3>
+            <p>编辑器、自动化、知识库、部署和日常写作流程。</p>
+          </a>
+          <a class="note-card" href="#contact">
+            <span>03</span>
+            <h3>阅读清单</h3>
+            <p>工程管理、产品判断、系统设计和 AI 应用方向的书与文章。</p>
+          </a>
+        </div>
+      </section>
+
+      <section class="contact-section" id="contact" aria-labelledby="contact-title">
+        <p class="section-kicker">Contact</p>
+        <h2 id="contact-title">如果你也在构建复杂但值得的东西，欢迎联系。</h2>
+        <div class="contact-actions">
+          <a class="button primary" href="mailto:hello@example.com">hello@example.com</a>
+          <button class="button secondary" type="button" data-copy-email="hello@example.com">
+            复制邮箱
+          </button>
+        </div>
+        <p class="copy-feedback" role="status" aria-live="polite"></p>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <span>© 2026 你的名字</span>
+      <span>Built for clear thinking and durable work.</span>
+    </footer>
+
+    <script src="./script.js"></script>
+  </body>
+</html>

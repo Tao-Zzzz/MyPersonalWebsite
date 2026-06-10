@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1040" height="1280" viewBox="0 0 1040 1280" role="img" aria-labelledby="title desc">
+  <title id="title">Profile placeholder</title>
+  <desc id="desc">A refined editorial placeholder image for a personal website portrait slot.</desc>
+  <rect width="1040" height="1280" fill="#20211d"/>
+  <rect x="58" y="58" width="924" height="1164" fill="#f6f1e7"/>
+  <path d="M138 168h764v944H138z" fill="#d8d1c1"/>
+  <path d="M138 168h764v944H138z" fill="none" stroke="#171713" stroke-width="3"/>
+  <path d="M208 1036c58-180 178-278 312-278s254 98 312 278" fill="#335848"/>
+  <circle cx="520" cy="508" r="178" fill="#f2eadc" stroke="#171713" stroke-width="3"/>
+  <path d="M342 504c20-132 93-218 181-218 94 0 159 84 176 218-73-35-142-52-207-51-52 1-102 18-150 51z" fill="#171713"/>
+  <path d="M365 649c39 62 91 94 155 94s116-32 155-94" fill="none" stroke="#171713" stroke-width="8" stroke-linecap="round"/>
+  <path d="M258 236h524M258 1090h524" stroke="#171713" stroke-width="3"/>
+  <text x="258" y="1014" fill="#171713" font-family="Georgia, serif" font-size="78">YOUR NAME</text>
+  <text x="262" y="286" fill="#8f332f" font-family="Arial, sans-serif" font-size="26" letter-spacing="8">PORTRAIT SLOT</text>
+</svg>
