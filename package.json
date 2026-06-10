@@ -1,0 +1,17 @@
+{
+  "name": "personal-profile-site",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "npm run build && vite preview --host 0.0.0.0 --configLoader native",
+    "build": "vite build --configLoader native",
+    "preview": "vite preview --host 0.0.0.0 --configLoader native"
+  },
+  "dependencies": {
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3",
+    "vite": "^7.2.7"
+  },
+  "devDependencies": {}
+}
