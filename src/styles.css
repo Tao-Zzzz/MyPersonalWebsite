@@ -89,7 +89,6 @@ textarea {
   border-left: 1px solid rgba(23, 23, 19, 0.08);
   padding: 14px 18px;
   background: rgba(255, 252, 245, 0.68);
-  backdrop-filter: blur(18px);
 }
 
 .site-header[data-elevated="true"] {
@@ -236,7 +235,6 @@ main {
   border-radius: 999px;
   padding: 7px 11px;
   background: rgba(255, 252, 245, 0.56);
-  backdrop-filter: blur(12px);
 }
 
 .live-dot {
@@ -390,7 +388,6 @@ main {
   padding: 9px 10px;
   background: rgba(23, 23, 19, 0.72);
   color: var(--paper-strong);
-  backdrop-filter: blur(12px);
 }
 
 .portrait-readout span {
@@ -420,12 +417,10 @@ main {
   background: rgba(23, 23, 19, 0.72);
   color: var(--paper-strong);
   font-size: 13px;
-  backdrop-filter: blur(12px);
 }
 
 .ticker {
   width: 100%;
-  overflow: hidden;
   border-block: 1px solid rgba(23, 23, 19, 0.14);
   background: var(--ink);
   color: var(--paper-strong);
@@ -433,8 +428,8 @@ main {
 
 .ticker-track {
   display: flex;
-  width: max-content;
-  animation: ticker 24s linear infinite;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 .ticker span {
@@ -786,12 +781,6 @@ main {
   padding: 24px 0 34px;
   color: var(--muted);
   font-size: 14px;
-}
-
-@keyframes ticker {
-  to {
-    transform: translateX(-50%);
-  }
 }
 
 @media (max-width: 920px) {

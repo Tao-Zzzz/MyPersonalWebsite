@@ -166,8 +166,6 @@ function useSignalCanvas(canvasRef) {
 
     let width = 0;
     let height = 0;
-    let animationFrame = null;
-    let lastDrawTime = 0;
 
     const resizeCanvas = () => {
       const ratio = Math.min(window.devicePixelRatio || 1, 2);
@@ -177,25 +175,13 @@ function useSignalCanvas(canvasRef) {
       signalCanvas.width = Math.floor(width * ratio);
       signalCanvas.height = Math.floor(height * ratio);
       context.setTransform(ratio, 0, 0, ratio, 0, 0);
+      drawSignalField();
     };
 
-    const drawSignalField = (timestamp = 0) => {
-      animationFrame = window.requestAnimationFrame(drawSignalField);
-
-      if (document.hidden || timestamp - lastDrawTime < 33) {
-        return;
-      }
-
-      lastDrawTime = timestamp;
+    const drawSignalField = () => {
       context.clearRect(0, 0, width, height);
 
       particles.forEach((particle) => {
-        particle.x += particle.vx;
-        particle.y += particle.vy;
-
-        if (particle.x < 0 || particle.x > 1) particle.vx *= -1;
-        if (particle.y < 0 || particle.y > 1) particle.vy *= -1;
-
         const x = particle.x * width;
         const y = particle.y * height;
 
@@ -228,11 +214,9 @@ function useSignalCanvas(canvasRef) {
     };
 
     resizeCanvas();
-    drawSignalField();
     window.addEventListener("resize", resizeCanvas, { passive: true });
 
     return () => {
-      window.cancelAnimationFrame(animationFrame);
       window.removeEventListener("resize", resizeCanvas);
     };
   }, [canvasRef]);
@@ -325,8 +309,8 @@ function Hero() {
 
       <div className="ticker" aria-label="关注领域">
         <div className="ticker-track">
-          {[...tickerItems, ...tickerItems].map((item, index) => (
-            <span key={`${item}-${index}`}>{item}</span>
+          {tickerItems.map((item) => (
+            <span key={item}>{item}</span>
           ))}
         </div>
       </div>
