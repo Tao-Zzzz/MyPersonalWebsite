@@ -168,16 +168,11 @@ main {
   min-height: calc(100svh - 72px);
   margin: 0 auto;
   padding: clamp(52px, 8vw, 96px) 0 64px;
-}
-
-.signal-canvas {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  width: 100%;
-  height: 100%;
-  opacity: 0.74;
-  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(23, 23, 19, 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(23, 23, 19, 0.045) 1px, transparent 1px);
+  background-position: center;
+  background-size: 52px 52px;
 }
 
 .hero::before {
@@ -421,30 +416,35 @@ main {
 
 .ticker {
   width: 100%;
+  overflow: hidden;
   border-block: 1px solid rgba(23, 23, 19, 0.14);
   background: var(--ink);
   color: var(--paper-strong);
+  contain: paint;
 }
 
-.ticker-track {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
+.ticker-bg {
+  width: 100%;
+  height: 46px;
+  background-image: url("/ticker-strip.png");
+  background-repeat: repeat-x;
+  background-size: 1440px 46px;
+  animation: ticker-background-scroll 18s linear infinite;
 }
 
-.ticker span {
-  padding: 13px 20px;
-  color: rgba(255, 252, 245, 0.84);
-  font-size: 12px;
-  font-weight: 780;
-  letter-spacing: 0.16em;
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
   white-space: nowrap;
 }
 
-.ticker span::after {
-  margin-left: 40px;
-  color: var(--electric);
-  content: "/";
+@keyframes ticker-background-scroll {
+  to {
+    background-position-x: -1440px;
+  }
 }
 
 .status-dot {
@@ -910,7 +910,7 @@ main {
     animation-iteration-count: 1 !important;
   }
 
-  .signal-canvas {
-    display: none;
+  .ticker-bg {
+    animation: none;
   }
 }

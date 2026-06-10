@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="46" viewBox="0 0 1440 46">
+  <rect width="1440" height="46" fill="#171713"/>
+  <g fill="#fffcf5" fill-opacity="0.84" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="780" letter-spacing="1.9">
+    <text x="20" y="29">AI WORKFLOW</text>
+    <text x="184" y="29">/</text>
+    <text x="230" y="29">SYSTEM DESIGN</text>
+    <text x="424" y="29">/</text>
+    <text x="470" y="29">TECHNICAL WRITING</text>
+    <text x="724" y="29">/</text>
+    <text x="770" y="29">PRODUCT SENSE</text>
+    <text x="978" y="29">/</text>
+    <text x="1024" y="29">AUTOMATION</text>
+    <text x="1190" y="29">/</text>
+    <text x="1236" y="29">KNOWLEDGE OPS</text>
+    <text x="1420" y="29">/</text>
+  </g>
+  <g fill="#6ee7f9" fill-opacity="0.85" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="780" letter-spacing="1.9">
+    <text x="184" y="29">/</text>
+    <text x="424" y="29">/</text>
+    <text x="724" y="29">/</text>
+    <text x="978" y="29">/</text>
+    <text x="1190" y="29">/</text>
+    <text x="1420" y="29">/</text>
+  </g>
+</svg>

@@ -1,7 +1,7 @@
 import React from "react";
 import profilePlaceholder from "../assets/profile-placeholder.svg";
 
-const { useEffect, useRef, useState } = React;
+const { useEffect, useState } = React;
 
 const navItems = [
   { id: "work", label: "项目" },
@@ -146,82 +146,6 @@ function useActiveSection(sectionIds) {
   return activeSection;
 }
 
-function useSignalCanvas(canvasRef) {
-  useEffect(() => {
-    const signalCanvas = canvasRef.current;
-    const prefersReducedMotion = window.matchMedia(
-      "(prefers-reduced-motion: reduce)",
-    ).matches;
-
-    if (!signalCanvas || prefersReducedMotion) return undefined;
-
-    const context = signalCanvas.getContext("2d");
-    const particles = Array.from({ length: 42 }, () => ({
-      x: Math.random(),
-      y: Math.random(),
-      vx: (Math.random() - 0.5) * 0.00042,
-      vy: (Math.random() - 0.5) * 0.00042,
-      radius: 1.2 + Math.random() * 1.8,
-    }));
-
-    let width = 0;
-    let height = 0;
-
-    const resizeCanvas = () => {
-      const ratio = Math.min(window.devicePixelRatio || 1, 2);
-      const bounds = signalCanvas.getBoundingClientRect();
-      width = bounds.width;
-      height = bounds.height;
-      signalCanvas.width = Math.floor(width * ratio);
-      signalCanvas.height = Math.floor(height * ratio);
-      context.setTransform(ratio, 0, 0, ratio, 0, 0);
-      drawSignalField();
-    };
-
-    const drawSignalField = () => {
-      context.clearRect(0, 0, width, height);
-
-      particles.forEach((particle) => {
-        const x = particle.x * width;
-        const y = particle.y * height;
-
-        context.beginPath();
-        context.arc(x, y, particle.radius, 0, Math.PI * 2);
-        context.fillStyle = "rgba(48, 79, 115, 0.42)";
-        context.fill();
-      });
-
-      for (let i = 0; i < particles.length; i += 1) {
-        for (let j = i + 1; j < particles.length; j += 1) {
-          const first = particles[i];
-          const second = particles[j];
-          const dx = (first.x - second.x) * width;
-          const dy = (first.y - second.y) * height;
-          const distance = Math.hypot(dx, dy);
-
-          if (distance < 145) {
-            context.beginPath();
-            context.moveTo(first.x * width, first.y * height);
-            context.lineTo(second.x * width, second.y * height);
-            context.strokeStyle = `rgba(48, 79, 115, ${
-              0.14 * (1 - distance / 145)
-            })`;
-            context.lineWidth = 1;
-            context.stroke();
-          }
-        }
-      }
-    };
-
-    resizeCanvas();
-    window.addEventListener("resize", resizeCanvas, { passive: true });
-
-    return () => {
-      window.removeEventListener("resize", resizeCanvas);
-    };
-  }, [canvasRef]);
-}
-
 function Header() {
   const elevated = useHeaderElevation();
   const activeSection = useActiveSection(navItems.map((item) => item.id));
@@ -249,13 +173,9 @@ function Header() {
 }
 
 function Hero() {
-  const canvasRef = useRef(null);
-  useSignalCanvas(canvasRef);
-
   return (
     <>
       <section className="hero" aria-labelledby="hero-title">
-        <canvas ref={canvasRef} className="signal-canvas" aria-hidden="true" />
         <div className="hero-copy">
           <p className="eyebrow">
             <span className="live-dot" aria-hidden="true" />
@@ -308,11 +228,8 @@ function Hero() {
       </section>
 
       <div className="ticker" aria-label="关注领域">
-        <div className="ticker-track">
-          {tickerItems.map((item) => (
-            <span key={item}>{item}</span>
-          ))}
-        </div>
+        <div className="ticker-bg" aria-hidden="true" />
+        <span className="sr-only">{tickerItems.join(" / ")}</span>
       </div>
     </>
   );
