@@ -12,21 +12,70 @@ const navItems = [
 
 const workItems = [
   {
-    variant: "featured",
-    meta: "AI 工具 / 2026",
+    year: "2026",
+    category: "AI 工具",
     title: "个人知识工作台",
     body: "把资料收集、写作、项目跟踪和复盘放到一个流畅的工作流中，用结构化笔记承接长期思考。",
+    cover: "/work/work-01-cover.png",
+    coverAlt: "抽象岩石主视觉",
+    inset: "/work/work-01-inset.png",
+    insetAlt: "人物肖像视觉",
+    href: "#contact",
   },
   {
-    meta: "工程效率 / 2025",
+    year: "2025",
+    category: "工程效率",
     title: "自动化交付脚本集",
     body: "面向日常开发、发布、排障的轻量脚本，减少重复操作，提高交付稳定性。",
+    cover: "/work/work-02-cover.png",
+    coverAlt: "深色产品主视觉",
+    inset: "/work/work-02-inset.png",
+    insetAlt: "产品细节视觉",
+    href: "#contact",
   },
   {
-    variant: "dark",
-    meta: "产品设计 / 2025",
+    year: "2025",
+    category: "产品设计",
     title: "技术博客信息架构",
     body: "围绕文章、项目、笔记、阅读清单建立内容层级，让个人网站可以长期生长。",
+    cover: "/work/work-03-cover.png",
+    coverAlt: "信息架构主视觉",
+    inset: "/work/work-03-inset.jpeg",
+    insetAlt: "界面细节视觉",
+    href: "#contact",
+  },
+  {
+    year: "2024",
+    category: "知识系统",
+    title: "阅读与笔记索引",
+    body: "把阅读清单、摘录、主题笔记和复盘串成可检索的长期资料库。",
+    cover: "/work/work-04-cover.png",
+    coverAlt: "知识系统主视觉",
+    inset: "/work/work-04-inset.png",
+    insetAlt: "索引卡片视觉",
+    href: "#contact",
+  },
+  {
+    year: "2024",
+    category: "交互实验",
+    title: "个人主页动效原型",
+    body: "探索滚动、悬停和信息层级之间的节奏，让作品展示更像可浏览的目录。",
+    cover: "/work/work-05-cover.png",
+    coverAlt: "动效原型主视觉",
+    inset: "/work/work-05-inset.png",
+    insetAlt: "交互界面视觉",
+    href: "#contact",
+  },
+  {
+    year: "2023",
+    category: "内容策略",
+    title: "写作发布系统",
+    body: "围绕选题、草稿、发布和复盘建立轻量流程，降低长期输出的维护成本。",
+    cover: "/work/work-06-cover.png",
+    coverAlt: "写作系统主视觉",
+    inset: "/work/work-06-inset.png",
+    insetAlt: "发布系统细节视觉",
+    href: "#contact",
   },
 ];
 
@@ -528,32 +577,75 @@ function ProfileSection() {
 }
 
 function WorkSection() {
+  const handleCardPointerMove = (event) => {
+    const bounds = event.currentTarget.getBoundingClientRect();
+    const x = (event.clientX - bounds.left) / bounds.width - 0.5;
+    const y = (event.clientY - bounds.top) / bounds.height - 0.5;
+
+    event.currentTarget.style.setProperty("--card-x", x.toFixed(4));
+    event.currentTarget.style.setProperty("--card-y", y.toFixed(4));
+  };
+
+  const handleCardPointerLeave = (event) => {
+    event.currentTarget.style.setProperty("--card-x", "0");
+    event.currentTarget.style.setProperty("--card-y", "0");
+  };
+
   return (
-    <section className="section" id="work" aria-labelledby="work-title" data-reveal>
-      <div className="section-heading" data-reveal>
+    <section className="section work-section" id="work" aria-labelledby="work-title">
+      <div className="section-heading">
         <div>
-          <p className="section-kicker">Selected work</p>
+          <p className="section-kicker">See works</p>
           <h2 id="work-title">精选项目</h2>
         </div>
         <a className="text-link" href="#contact">
           合作咨询
         </a>
       </div>
-      <div className="work-grid">
+      <div className="work-cards" aria-label="精选项目列表">
         {workItems.map((item, index) => (
-          <article
+          <a
             key={item.title}
-            className={["work-item", item.variant].filter(Boolean).join(" ")}
-            data-reveal
-            style={{ "--reveal-delay": `${index * 90}ms` }}
+            className={[
+              "work-card",
+              index === 0 ? "is-featured" : "",
+              index % 3 === 1 ? "is-tall" : "",
+              index % 3 === 2 ? "is-offset" : "",
+            ].filter(Boolean).join(" ")}
+            href={item.href}
+            onPointerMove={handleCardPointerMove}
+            onPointerLeave={handleCardPointerLeave}
+            aria-label={`查看${item.title}项目`}
           >
-            <div className="work-meta">{item.meta}</div>
-            <h3>{item.title}</h3>
-            <p>{item.body}</p>
-            <a href="#contact" aria-label={`联系了解${item.title}项目`}>
-              联系了解
-            </a>
-          </article>
+            <span className="work-card__top">
+              <span className="work-card__glow" aria-hidden="true" />
+              <span className="work-card__media">
+                <img src={item.cover} alt={item.coverAlt} loading="lazy" />
+              </span>
+              <span className="work-card__frame" aria-hidden="true">
+                <span>{item.year}</span>
+                <span>{item.category}</span>
+              </span>
+              <span className="work-card__inset">
+                <img src={item.inset} alt={item.insetAlt} loading="lazy" />
+              </span>
+              <span className="work-card__banner" aria-hidden="true">
+                <span>{item.category}</span>
+                <span />
+              </span>
+              <span className="work-card__orbit" aria-hidden="true" />
+            </span>
+            <span className="work-card__bottom">
+              <span>
+                <span className="work-card__title">
+                  <span>{item.title}</span>
+                  <span>{item.title}</span>
+                </span>
+                <small>{item.body}</small>
+              </span>
+              <span className="work-card__count">({String(index + 1).padStart(2, "0")})</span>
+            </span>
+          </a>
         ))}
       </div>
     </section>
