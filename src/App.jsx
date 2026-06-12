@@ -99,6 +99,27 @@ const tickerItems = [
   "KNOWLEDGE OPS",
 ];
 
+const partnerLines = [
+  "Strategic Systems",
+  "Technical Writing",
+  "Product Workflows",
+  "AI Operations",
+];
+
+const marqueeItems = [...tickerItems, ...tickerItems];
+
+const helixItems = [
+  { meta: "01", title: "Systems", body: "工程系统" },
+  { meta: "02", title: "Writing", body: "长期写作" },
+  { meta: "03", title: "AI Ops", body: "智能工作流" },
+  { meta: "04", title: "Product", body: "产品判断" },
+  { meta: "05", title: "Automation", body: "自动化交付" },
+  { meta: "06", title: "Research", body: "问题研究" },
+  { meta: "07", title: "Design", body: "交互表达" },
+  { meta: "08", title: "Builder", body: "持续构建" },
+  { meta: "09", title: "Methods", body: "方法沉淀" },
+];
+
 function useHeaderElevation() {
   const [elevated, setElevated] = useState(false);
 
@@ -146,12 +167,141 @@ function useActiveSection(sectionIds) {
   return activeSection;
 }
 
+function useGlobalPointer() {
+  useEffect(() => {
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    if (reduceMotion.matches) return undefined;
+
+    let rafId = 0;
+    let nextX = 0;
+    let nextY = 0;
+
+    const commit = () => {
+      const root = document.documentElement;
+      root.style.setProperty("--pointer-x", nextX.toFixed(4));
+      root.style.setProperty("--pointer-y", nextY.toFixed(4));
+      root.style.setProperty("--cursor-x", `${window.innerWidth * (nextX + 0.5)}px`);
+      root.style.setProperty("--cursor-y", `${window.innerHeight * (nextY + 0.5)}px`);
+      rafId = 0;
+    };
+
+    const handlePointerMove = (event) => {
+      nextX = event.clientX / window.innerWidth - 0.5;
+      nextY = event.clientY / window.innerHeight - 0.5;
+
+      if (!rafId) {
+        rafId = window.requestAnimationFrame(commit);
+      }
+    };
+
+    const resetPointer = () => {
+      nextX = 0;
+      nextY = 0;
+
+      if (!rafId) {
+        rafId = window.requestAnimationFrame(commit);
+      }
+    };
+
+    window.addEventListener("pointermove", handlePointerMove, { passive: true });
+    window.addEventListener("pointerleave", resetPointer);
+    return () => {
+      window.removeEventListener("pointermove", handlePointerMove);
+      window.removeEventListener("pointerleave", resetPointer);
+      if (rafId) window.cancelAnimationFrame(rafId);
+    };
+  }, []);
+}
+
+function useScrollMotion() {
+  useEffect(() => {
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    if (reduceMotion.matches) return undefined;
+
+    let rafId = 0;
+
+    const commit = () => {
+      const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = maxScroll > 0 ? window.scrollY / maxScroll : 0;
+
+      document.documentElement.style.setProperty("--scroll-progress", progress.toFixed(4));
+      document.documentElement.style.setProperty("--scroll-y", `${window.scrollY.toFixed(1)}px`);
+      document.documentElement.style.setProperty("--scroll-drift", `${(window.scrollY * -0.06).toFixed(1)}px`);
+      document.documentElement.style.setProperty("--scroll-shift", `${(progress * -80).toFixed(1)}px`);
+      document.documentElement.style.setProperty("--scroll-spin", `${(progress * 360).toFixed(2)}deg`);
+      document.documentElement.style.setProperty("--scroll-counterspin", `${(progress * -220).toFixed(2)}deg`);
+      document.documentElement.style.setProperty("--scroll-tilt", `${(progress * 10).toFixed(2)}deg`);
+      document.documentElement.style.setProperty("--scroll-soft-tilt", `${(progress * -2.8).toFixed(2)}deg`);
+      rafId = 0;
+    };
+
+    const requestCommit = () => {
+      if (!rafId) {
+        rafId = window.requestAnimationFrame(commit);
+      }
+    };
+
+    commit();
+    window.addEventListener("scroll", requestCommit, { passive: true });
+    window.addEventListener("resize", requestCommit);
+
+    return () => {
+      window.removeEventListener("scroll", requestCommit);
+      window.removeEventListener("resize", requestCommit);
+      if (rafId) window.cancelAnimationFrame(rafId);
+    };
+  }, []);
+}
+
+function useRevealOnScroll() {
+  useEffect(() => {
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const getPendingRevealItems = () =>
+      Array.from(document.querySelectorAll("[data-reveal]:not(.is-visible)"));
+
+    if (reduceMotion.matches) {
+      getPendingRevealItems().forEach((item) => item.classList.add("is-visible"));
+      return undefined;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("is-visible");
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      {
+        rootMargin: "0px 0px -12% 0px",
+        threshold: 0.18,
+      },
+    );
+
+    const observePendingItems = () => {
+      getPendingRevealItems().forEach((item) => observer.observe(item));
+    };
+
+    const mutationObserver = new MutationObserver(observePendingItems);
+
+    observePendingItems();
+    mutationObserver.observe(document.body, { childList: true, subtree: true });
+
+    return () => {
+      observer.disconnect();
+      mutationObserver.disconnect();
+    };
+  }, []);
+}
+
 function Header() {
   const elevated = useHeaderElevation();
   const activeSection = useActiveSection(navItems.map((item) => item.id));
 
   return (
     <header className="site-header" data-elevated={String(elevated)}>
+      <span className="scroll-progress" aria-hidden="true" />
       <a className="brand" href="#top" aria-label="回到首页">
         <span className="brand-mark">YN</span>
         <span>你的名字</span>
@@ -175,17 +325,17 @@ function Header() {
 function Hero() {
   return (
     <>
-      <section className="hero" aria-labelledby="hero-title">
-        <div className="hero-copy">
+      <section className="hero" aria-labelledby="hero-title" data-reveal>
+        <div className="hero-copy" data-reveal>
           <p className="eyebrow">
             <span className="live-dot" aria-hidden="true" />
             Independent developer / Technical writer
           </p>
           <h1 id="hero-title">
-            <span>把复杂系统</span>
-            <span>写清楚，</span>
-            <span>也把想法</span>
-            <span>做成产品。</span>
+            <span style={{ "--line-index": 0 }}>把复杂系统</span>
+            <span style={{ "--line-index": 1 }}>写清楚，</span>
+            <span style={{ "--line-index": 2 }}>也把想法</span>
+            <span style={{ "--line-index": 3 }}>做成产品。</span>
           </h1>
           <p className="hero-intro">
             我关注工程效率、AI
@@ -206,57 +356,168 @@ function Hero() {
           </div>
         </div>
 
-        <aside className="portrait-panel" aria-label="个人信息摘要">
-          <div className="portrait-shell">
-            <img
-              src={profilePlaceholder}
-              alt="个人头像占位图"
-              className="portrait"
-              width="520"
-              height="640"
-            />
-            <div className="portrait-readout" aria-hidden="true">
-              <span>BUILD LOG</span>
-              <strong>2026.06</strong>
-            </div>
-          </div>
-          <div className="availability">
-            <span className="status-dot" aria-hidden="true" />
-            <span>开放远程协作 / 咨询 / 写作合作</span>
-          </div>
-        </aside>
+        <SingleHelix />
       </section>
 
-      <div className="ticker" aria-label="关注领域">
-        <div className="ticker-bg" aria-hidden="true" />
-        <span className="sr-only">{tickerItems.join(" / ")}</span>
-      </div>
+      <PalmerView />
     </>
+  );
+}
+
+function SingleHelix() {
+  const lastIndex = helixItems.length - 1;
+
+  return (
+    <aside className="single-helix" aria-label="单螺旋动态能力展示" data-reveal>
+      <div className="single-helix__stage">
+        <div className="single-helix__axis" aria-hidden="true" />
+        <svg className="single-helix__thread" viewBox="0 0 420 640" aria-hidden="true">
+          <path d="M210 28 C84 92 84 168 210 232 S336 372 210 436 S84 548 210 612" />
+        </svg>
+        <div className="single-helix__track" aria-hidden="true">
+          {helixItems.map((item, index) => {
+            const angle = index * 48;
+            const y = 8 + (index / lastIndex) * 84;
+
+            return (
+              <div
+                className="single-helix__card-shell"
+                key={item.title}
+                style={{
+                  "--helix-angle": `${angle}deg`,
+                  "--helix-face": `${-angle}deg`,
+                  "--helix-face-end": `${360 - angle}deg`,
+                  "--helix-y": `${y}%`,
+                  "--helix-delay": `${index * -0.12}s`,
+                }}
+              >
+                <div className="single-helix__card">
+                  <span>{item.meta}</span>
+                  <strong>{item.title}</strong>
+                  <em>{item.body}</em>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+        <div className="single-helix__portrait">
+          <img src={profilePlaceholder} alt="个人头像占位图" width="180" height="220" />
+        </div>
+      </div>
+      <div className="availability">
+        <span className="status-dot" aria-hidden="true" />
+        <span>开放远程协作 / 咨询 / 写作合作</span>
+      </div>
+    </aside>
+  );
+}
+
+function RollingText({ children }) {
+  return (
+    <span className="rolling-text" aria-label={children}>
+      <span aria-hidden="true">{children}</span>
+    </span>
+  );
+}
+
+function PalmerView() {
+  return (
+    <section className="palmer-view" id="palmer-view" aria-labelledby="palmer-view-title">
+      <div className="palmer-view__marquee" aria-hidden="true">
+        <div>
+          {marqueeItems.map((item, index) => (
+            <span key={`${item}-${index}`}>{item}</span>
+          ))}
+        </div>
+      </div>
+      <div className="palmer-view__inner">
+        <div className="palmer-view__meta" aria-label="Brand partner metadata" data-reveal>
+          <span>© Brand Partners</span>
+          <span>パートナー</span>
+          <strong>(WDX® — 08)</strong>
+        </div>
+
+        <div className="palmer-view__statement" data-reveal>
+          <p className="palmer-view__kicker">Selected practice</p>
+          <h2 id="palmer-view-title">
+            <RollingText>Creative</RollingText>
+            <RollingText>Teams</RollingText>
+          </h2>
+        </div>
+
+        <div className="palmer-view__orbit" aria-hidden="true" data-reveal>
+          <svg className="orbit-ring" viewBox="0 0 220 220">
+            <defs>
+              <path
+                id="orbit-text-path"
+                d="M110,110 m-82,0 a82,82 0 1,1 164,0 a82,82 0 1,1 -164,0"
+              />
+            </defs>
+            <circle cx="110" cy="110" r="88" />
+            <text>
+              <textPath href="#orbit-text-path" startOffset="0%">
+                VIEW MODE • SYSTEMS • WRITING • PRODUCT •
+              </textPath>
+            </text>
+          </svg>
+          <div className="orbit-core">
+            <span>View</span>
+            <strong>08</strong>
+          </div>
+        </div>
+
+        <ul className="palmer-view__list" aria-label="Practice areas">
+          {partnerLines.map((line, index) => (
+            <li
+              key={line}
+              data-reveal
+              style={{ "--reveal-delay": `${index * 70}ms` }}
+            >
+              <span>{String(index + 1).padStart(2, "0")}</span>
+              <RollingText>{line}</RollingText>
+            </li>
+          ))}
+        </ul>
+
+        <div className="palmer-view__strip" aria-hidden="true">
+          <span>Art Direction</span>
+          <span>Systems</span>
+          <span>Strategy</span>
+        </div>
+
+        <div className="palmer-view__footer" aria-hidden="true">
+          <span>© Curated Interfaces ビジュアル</span>
+          <span>(WDX® — 08)</span>
+          <span>Digital Builder</span>
+        </div>
+      </div>
+      <span className="sr-only">{tickerItems.join(" / ")}</span>
+    </section>
   );
 }
 
 function ProfileSection() {
   return (
-    <section className="section split-section" aria-labelledby="about-title">
-      <div>
+    <section className="section split-section" aria-labelledby="about-title" data-reveal>
+      <div data-reveal>
         <p className="section-kicker">Profile</p>
         <h2 id="about-title">一个偏工程、偏产品、也偏写作的人。</h2>
       </div>
-      <div className="prose">
+      <div className="prose" data-reveal>
         <p>
           这里可以换成你的真实介绍：你做过什么、擅长什么、现在关注什么，以及别人为什么应该信任你。
           当前版本先保留清爽的个人品牌表达，后面可以扩展成简历、博客、知识库或项目展示站。
         </p>
         <div className="metrics" aria-label="关键数据">
-          <div>
+          <div data-reveal style={{ "--reveal-delay": "0ms" }}>
             <strong>8+</strong>
             <span>年工程经验</span>
           </div>
-          <div>
+          <div data-reveal style={{ "--reveal-delay": "80ms" }}>
             <strong>30+</strong>
             <span>项目沉淀</span>
           </div>
-          <div>
+          <div data-reveal style={{ "--reveal-delay": "160ms" }}>
             <strong>120k</strong>
             <span>文字记录</span>
           </div>
@@ -268,8 +529,8 @@ function ProfileSection() {
 
 function WorkSection() {
   return (
-    <section className="section" id="work" aria-labelledby="work-title">
-      <div className="section-heading">
+    <section className="section" id="work" aria-labelledby="work-title" data-reveal>
+      <div className="section-heading" data-reveal>
         <div>
           <p className="section-kicker">Selected work</p>
           <h2 id="work-title">精选项目</h2>
@@ -279,10 +540,12 @@ function WorkSection() {
         </a>
       </div>
       <div className="work-grid">
-        {workItems.map((item) => (
+        {workItems.map((item, index) => (
           <article
             key={item.title}
             className={["work-item", item.variant].filter(Boolean).join(" ")}
+            data-reveal
+            style={{ "--reveal-delay": `${index * 90}ms` }}
           >
             <div className="work-meta">{item.meta}</div>
             <h3>{item.title}</h3>
@@ -304,8 +567,8 @@ function WritingSection() {
   );
 
   return (
-    <section className="section writing-section" id="writing" aria-labelledby="writing-title">
-      <div className="section-heading">
+    <section className="section writing-section" id="writing" aria-labelledby="writing-title" data-reveal>
+      <div className="section-heading" data-reveal>
         <div>
           <p className="section-kicker">Writing</p>
           <h2 id="writing-title">技术文章</h2>
@@ -330,8 +593,13 @@ function WritingSection() {
       </div>
 
       <div className="article-list">
-        {visibleArticles.map((article) => (
-          <article className="article-row" key={article.title}>
+        {visibleArticles.map((article, index) => (
+          <article
+            className="article-row"
+            key={article.title}
+            data-reveal
+            style={{ "--reveal-delay": `${index * 55}ms` }}
+          >
             <time dateTime={article.date}>{article.displayDate}</time>
             <div>
               <p className="article-topic">{article.topicLabel}</p>
@@ -349,16 +617,22 @@ function WritingSection() {
 
 function NotesSection() {
   return (
-    <section className="section notes-section" id="notes" aria-labelledby="notes-title">
-      <div className="section-heading">
+    <section className="section notes-section" id="notes" aria-labelledby="notes-title" data-reveal>
+      <div className="section-heading" data-reveal>
         <div>
           <p className="section-kicker">Notes</p>
           <h2 id="notes-title">近期笔记</h2>
         </div>
       </div>
       <div className="notes-grid">
-        {notes.map((note) => (
-          <a className="note-card" href="#contact" key={note.number}>
+        {notes.map((note, index) => (
+          <a
+            className="note-card"
+            href="#contact"
+            key={note.number}
+            data-reveal
+            style={{ "--reveal-delay": `${index * 85}ms` }}
+          >
             <span>{note.number}</span>
             <h3>{note.title}</h3>
             <p>{note.body}</p>
@@ -389,9 +663,11 @@ function ContactSection() {
   };
 
   return (
-    <section className="contact-section" id="contact" aria-labelledby="contact-title">
+    <section className="contact-section" id="contact" aria-labelledby="contact-title" data-reveal>
       <p className="section-kicker">Contact</p>
-      <h2 id="contact-title">如果你也在构建复杂但值得的东西，欢迎联系。</h2>
+      <h2 id="contact-title" data-reveal>
+        如果你也在构建复杂但值得的东西，欢迎联系。
+      </h2>
       <div className="contact-actions">
         <a className="button primary" href={`mailto:${email}`}>
           {email}
@@ -417,6 +693,10 @@ function Footer() {
 }
 
 export default function App() {
+  useGlobalPointer();
+  useScrollMotion();
+  useRevealOnScroll();
+
   return (
     <>
       <a className="skip-link" href="#work">
