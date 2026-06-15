@@ -16,10 +16,8 @@ const workItems = [
     category: "AI 工具",
     title: "个人知识工作台",
     body: "把资料收集、写作、项目跟踪和复盘放到一个流畅的工作流中，用结构化笔记承接长期思考。",
-    cover: "/work/work-01-cover.png",
+    cover: "/work-perf/work-01-cover.jpg",
     coverAlt: "抽象岩石主视觉",
-    inset: "/work/work-01-inset.png",
-    insetAlt: "人物肖像视觉",
     href: "#contact",
   },
   {
@@ -27,10 +25,8 @@ const workItems = [
     category: "工程效率",
     title: "自动化交付脚本集",
     body: "面向日常开发、发布、排障的轻量脚本，减少重复操作，提高交付稳定性。",
-    cover: "/work/work-02-cover.png",
+    cover: "/work-perf/work-02-cover.jpg",
     coverAlt: "深色产品主视觉",
-    inset: "/work/work-02-inset.png",
-    insetAlt: "产品细节视觉",
     href: "#contact",
   },
   {
@@ -38,10 +34,8 @@ const workItems = [
     category: "产品设计",
     title: "技术博客信息架构",
     body: "围绕文章、项目、笔记、阅读清单建立内容层级，让个人网站可以长期生长。",
-    cover: "/work/work-03-cover.png",
+    cover: "/work-perf/work-03-cover.jpg",
     coverAlt: "信息架构主视觉",
-    inset: "/work/work-03-inset.jpeg",
-    insetAlt: "界面细节视觉",
     href: "#contact",
   },
   {
@@ -49,10 +43,8 @@ const workItems = [
     category: "知识系统",
     title: "阅读与笔记索引",
     body: "把阅读清单、摘录、主题笔记和复盘串成可检索的长期资料库。",
-    cover: "/work/work-04-cover.png",
+    cover: "/work-perf/work-04-cover.jpg",
     coverAlt: "知识系统主视觉",
-    inset: "/work/work-04-inset.png",
-    insetAlt: "索引卡片视觉",
     href: "#contact",
   },
   {
@@ -60,10 +52,8 @@ const workItems = [
     category: "交互实验",
     title: "个人主页动效原型",
     body: "探索滚动、悬停和信息层级之间的节奏，让作品展示更像可浏览的目录。",
-    cover: "/work/work-05-cover.png",
+    cover: "/work-perf/work-05-cover.jpg",
     coverAlt: "动效原型主视觉",
-    inset: "/work/work-05-inset.png",
-    insetAlt: "交互界面视觉",
     href: "#contact",
   },
   {
@@ -71,10 +61,8 @@ const workItems = [
     category: "内容策略",
     title: "写作发布系统",
     body: "围绕选题、草稿、发布和复盘建立轻量流程，降低长期输出的维护成本。",
-    cover: "/work/work-06-cover.png",
+    cover: "/work-perf/work-06-cover.jpg",
     coverAlt: "写作系统主视觉",
-    inset: "/work/work-06-inset.png",
-    insetAlt: "发布系统细节视觉",
     href: "#contact",
   },
 ];
@@ -173,11 +161,32 @@ function useHeaderElevation() {
   const [elevated, setElevated] = useState(false);
 
   useEffect(() => {
-    const updateHeader = () => setElevated(window.scrollY > 8);
+    let currentElevated = window.scrollY > 8;
+    let rafId = 0;
+
+    const updateHeader = () => {
+      const nextElevated = window.scrollY > 8;
+
+      if (nextElevated !== currentElevated) {
+        currentElevated = nextElevated;
+        setElevated(nextElevated);
+      }
+
+      rafId = 0;
+    };
+
+    const requestUpdate = () => {
+      if (!rafId) {
+        rafId = window.requestAnimationFrame(updateHeader);
+      }
+    };
 
     updateHeader();
-    window.addEventListener("scroll", updateHeader, { passive: true });
-    return () => window.removeEventListener("scroll", updateHeader);
+    window.addEventListener("scroll", requestUpdate, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", requestUpdate);
+      if (rafId) window.cancelAnimationFrame(rafId);
+    };
   }, []);
 
   return elevated;
@@ -216,56 +225,13 @@ function useActiveSection(sectionIds) {
   return activeSection;
 }
 
-function useGlobalPointer() {
-  useEffect(() => {
-    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
-    if (reduceMotion.matches) return undefined;
-
-    let rafId = 0;
-    let nextX = 0;
-    let nextY = 0;
-
-    const commit = () => {
-      const root = document.documentElement;
-      root.style.setProperty("--pointer-x", nextX.toFixed(4));
-      root.style.setProperty("--pointer-y", nextY.toFixed(4));
-      root.style.setProperty("--cursor-x", `${window.innerWidth * (nextX + 0.5)}px`);
-      root.style.setProperty("--cursor-y", `${window.innerHeight * (nextY + 0.5)}px`);
-      rafId = 0;
-    };
-
-    const handlePointerMove = (event) => {
-      nextX = event.clientX / window.innerWidth - 0.5;
-      nextY = event.clientY / window.innerHeight - 0.5;
-
-      if (!rafId) {
-        rafId = window.requestAnimationFrame(commit);
-      }
-    };
-
-    const resetPointer = () => {
-      nextX = 0;
-      nextY = 0;
-
-      if (!rafId) {
-        rafId = window.requestAnimationFrame(commit);
-      }
-    };
-
-    window.addEventListener("pointermove", handlePointerMove, { passive: true });
-    window.addEventListener("pointerleave", resetPointer);
-    return () => {
-      window.removeEventListener("pointermove", handlePointerMove);
-      window.removeEventListener("pointerleave", resetPointer);
-      if (rafId) window.cancelAnimationFrame(rafId);
-    };
-  }, []);
-}
-
 function useScrollMotion() {
   useEffect(() => {
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
     if (reduceMotion.matches) return undefined;
+
+    const progressBar = document.querySelector(".scroll-progress");
+    if (!progressBar) return undefined;
 
     let rafId = 0;
 
@@ -273,14 +239,7 @@ function useScrollMotion() {
       const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
       const progress = maxScroll > 0 ? window.scrollY / maxScroll : 0;
 
-      document.documentElement.style.setProperty("--scroll-progress", progress.toFixed(4));
-      document.documentElement.style.setProperty("--scroll-y", `${window.scrollY.toFixed(1)}px`);
-      document.documentElement.style.setProperty("--scroll-drift", `${(window.scrollY * -0.06).toFixed(1)}px`);
-      document.documentElement.style.setProperty("--scroll-shift", `${(progress * -80).toFixed(1)}px`);
-      document.documentElement.style.setProperty("--scroll-spin", `${(progress * 360).toFixed(2)}deg`);
-      document.documentElement.style.setProperty("--scroll-counterspin", `${(progress * -220).toFixed(2)}deg`);
-      document.documentElement.style.setProperty("--scroll-tilt", `${(progress * 10).toFixed(2)}deg`);
-      document.documentElement.style.setProperty("--scroll-soft-tilt", `${(progress * -2.8).toFixed(2)}deg`);
+      progressBar.style.transform = `scaleX(${progress.toFixed(4)})`;
       rafId = 0;
     };
 
@@ -341,6 +300,30 @@ function useRevealOnScroll() {
       observer.disconnect();
       mutationObserver.disconnect();
     };
+  }, []);
+}
+
+function usePreloadWorkImages() {
+  useEffect(() => {
+    const preload = () => {
+      workItems.forEach((item) => {
+        const image = new Image();
+        image.decoding = "async";
+        image.src = item.cover;
+
+        if (image.decode) {
+          image.decode().catch(() => {});
+        }
+      });
+    };
+
+    if ("requestIdleCallback" in window) {
+      const idleId = window.requestIdleCallback(preload, { timeout: 1600 });
+      return () => window.cancelIdleCallback(idleId);
+    }
+
+    const timeoutId = window.setTimeout(preload, 700);
+    return () => window.clearTimeout(timeoutId);
   }, []);
 }
 
@@ -577,20 +560,6 @@ function ProfileSection() {
 }
 
 function WorkSection() {
-  const handleCardPointerMove = (event) => {
-    const bounds = event.currentTarget.getBoundingClientRect();
-    const x = (event.clientX - bounds.left) / bounds.width - 0.5;
-    const y = (event.clientY - bounds.top) / bounds.height - 0.5;
-
-    event.currentTarget.style.setProperty("--card-x", x.toFixed(4));
-    event.currentTarget.style.setProperty("--card-y", y.toFixed(4));
-  };
-
-  const handleCardPointerLeave = (event) => {
-    event.currentTarget.style.setProperty("--card-x", "0");
-    event.currentTarget.style.setProperty("--card-y", "0");
-  };
-
   return (
     <section className="section work-section" id="work" aria-labelledby="work-title">
       <div className="section-heading">
@@ -613,27 +582,28 @@ function WorkSection() {
               index % 3 === 2 ? "is-offset" : "",
             ].filter(Boolean).join(" ")}
             href={item.href}
-            onPointerMove={handleCardPointerMove}
-            onPointerLeave={handleCardPointerLeave}
             aria-label={`查看${item.title}项目`}
           >
             <span className="work-card__top">
-              <span className="work-card__glow" aria-hidden="true" />
               <span className="work-card__media">
-                <img src={item.cover} alt={item.coverAlt} loading="lazy" />
+                <img
+                  src={item.cover}
+                  alt={item.coverAlt}
+                  loading="eager"
+                  decoding="async"
+                  fetchPriority={index === 0 ? "high" : "auto"}
+                  width="960"
+                  height="960"
+                />
               </span>
               <span className="work-card__frame" aria-hidden="true">
                 <span>{item.year}</span>
                 <span>{item.category}</span>
               </span>
-              <span className="work-card__inset">
-                <img src={item.inset} alt={item.insetAlt} loading="lazy" />
-              </span>
               <span className="work-card__banner" aria-hidden="true">
                 <span>{item.category}</span>
                 <span />
               </span>
-              <span className="work-card__orbit" aria-hidden="true" />
             </span>
             <span className="work-card__bottom">
               <span>
@@ -785,9 +755,9 @@ function Footer() {
 }
 
 export default function App() {
-  useGlobalPointer();
   useScrollMotion();
   useRevealOnScroll();
+  usePreloadWorkImages();
 
   return (
     <>
