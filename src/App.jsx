@@ -67,6 +67,99 @@ const workItems = [
   },
 ];
 
+const workDetails = [
+  {
+    slug: "knowledge-workbench",
+    href: "/work/knowledge-workbench",
+    summary: "一个面向个人长期工作的知识中枢，把资料收集、项目推进、写作草稿和复盘沉淀放在同一套信息结构里。",
+    role: "产品架构 / 信息设计 / 前端原型",
+    status: "可交互原型",
+    focus: "知识流转、任务上下文、复盘沉淀",
+    highlights: [
+      "设计资料、项目、文章和复盘之间的统一索引关系。",
+      "把输入、整理、输出拆成可持续维护的工作流。",
+      "用轻量看板和标签体系减少长期资料失联。",
+    ],
+    stack: ["React", "Local-first workflow", "Structured notes"],
+    result: "形成了可扩展到博客、简历和知识库的个人内容底座。",
+  },
+  {
+    slug: "delivery-scripts",
+    href: "/work/delivery-scripts",
+    summary: "一组围绕日常开发、发布和排障的自动化脚本，把重复命令固化为可复用、可检查的交付流程。",
+    role: "工程实现 / 流程整理 / 脚本维护",
+    status: "持续迭代",
+    focus: "重复任务自动化、发布检查、故障定位",
+    highlights: [
+      "梳理高频手工步骤，合并成一致的命令入口。",
+      "为构建、预览、日志和端口检查补齐可读反馈。",
+      "降低本地调试和上线前检查的操作成本。",
+    ],
+    stack: ["PowerShell", "Node.js", "Vite"],
+    result: "让常见维护动作从临时命令变成稳定流程，减少遗漏和返工。",
+  },
+  {
+    slug: "blog-information-architecture",
+    href: "/work/blog-information-architecture",
+    summary: "为个人技术博客设计长期信息架构，让文章、项目、笔记和阅读清单能够互相支撑，而不是分散堆放。",
+    role: "信息架构 / 内容策略 / 体验设计",
+    status: "结构方案",
+    focus: "栏目层级、内容关系、长期扩展",
+    highlights: [
+      "定义项目、文章、笔记三类内容的边界和入口。",
+      "规划从首页到详情页的阅读路径和交叉引用方式。",
+      "保留后续扩展简历、知识库和案例研究的空间。",
+    ],
+    stack: ["Content model", "Navigation design", "React"],
+    result: "让个人网站从展示页升级为长期内容系统。",
+  },
+  {
+    slug: "reading-note-index",
+    href: "/work/reading-note-index",
+    summary: "把阅读清单、摘录、主题笔记和复盘串成一个可检索的长期资料库，服务后续写作和项目判断。",
+    role: "知识整理 / 索引设计 / 写作流程",
+    status: "使用中",
+    focus: "阅读沉淀、主题索引、输出复用",
+    highlights: [
+      "按主题、来源和可复用观点建立索引维度。",
+      "区分原始摘录、个人解释和可发布草稿。",
+      "让阅读内容可以回流到文章、项目和决策记录。",
+    ],
+    stack: ["Markdown", "Tag system", "Search-first notes"],
+    result: "减少重复查找，让长期阅读更容易转化成可输出内容。",
+  },
+  {
+    slug: "homepage-motion-prototype",
+    href: "/work/homepage-motion-prototype",
+    summary: "围绕个人主页的滚动、悬停和信息层级做动效原型，目标是在视觉表达和性能稳定之间取得平衡。",
+    role: "交互设计 / 前端动效 / 性能优化",
+    status: "已优化",
+    focus: "滚动体验、卡片反馈、动效性能",
+    highlights: [
+      "把昂贵的鼠标跟随和滤镜动画改成轻量 transform。",
+      "优化滚动监听，避免全局样式和 React 状态频繁更新。",
+      "保留卡片悬停反馈，同时降低滚轮滚动掉帧。",
+    ],
+    stack: ["React", "CSS animation", "Performance tuning"],
+    result: "精选项目区域滚动明显更顺滑，交互反馈仍然清晰。",
+  },
+  {
+    slug: "writing-publishing-system",
+    href: "/work/writing-publishing-system",
+    summary: "围绕选题、草稿、发布和复盘建立轻量写作系统，降低长期输出的维护成本。",
+    role: "内容策略 / 流程设计 / 发布维护",
+    status: "规划中",
+    focus: "选题管理、草稿推进、发布复盘",
+    highlights: [
+      "把选题从灵感列表拆成问题、材料和产出状态。",
+      "为草稿、成文和复盘建立不同的维护节奏。",
+      "让文章可以反向沉淀到项目说明和方法论页面。",
+    ],
+    stack: ["Editorial workflow", "Markdown", "Review checklist"],
+    result: "让写作从偶发输出变成可持续的内容生产流程。",
+  },
+];
+
 const articles = [
   {
     topic: "engineering",
@@ -581,7 +674,7 @@ function WorkSection() {
               index % 3 === 1 ? "is-tall" : "",
               index % 3 === 2 ? "is-offset" : "",
             ].filter(Boolean).join(" ")}
-            href={item.href}
+            href={workDetails[index].href}
             aria-label={`查看${item.title}项目`}
           >
             <span className="work-card__top">
@@ -619,6 +712,83 @@ function WorkSection() {
         ))}
       </div>
     </section>
+  );
+}
+
+function ProjectDetailPage({ item, detail, itemNumber }) {
+  return (
+    <>
+      <header className="project-header">
+        <a className="project-back" href="/#work">
+          返回项目
+        </a>
+        <a className="brand" href="/" aria-label="返回首页">
+          <span className="brand-mark">YN</span>
+          <span>你的名字</span>
+        </a>
+      </header>
+      <main className="project-page">
+        <section className="project-hero" aria-labelledby="project-title">
+          <div className="project-hero__copy">
+            <p className="project-kicker">
+              <span>{itemNumber}</span>
+              <span>{item.year}</span>
+              <span>{item.category}</span>
+            </p>
+            <h1 id="project-title">{item.title}</h1>
+            <p>{detail.summary}</p>
+          </div>
+          <div className="project-hero__media">
+            <img src={item.cover} alt={item.coverAlt} width="960" height="960" />
+          </div>
+        </section>
+
+        <section className="project-details" aria-label="项目详情">
+          <dl className="project-meta">
+            <div>
+              <dt>Role</dt>
+              <dd>{detail.role}</dd>
+            </div>
+            <div>
+              <dt>Status</dt>
+              <dd>{detail.status}</dd>
+            </div>
+            <div>
+              <dt>Focus</dt>
+              <dd>{detail.focus}</dd>
+            </div>
+          </dl>
+
+          <div className="project-body">
+            <section>
+              <h2>Key work</h2>
+              <ul>
+                {detail.highlights.map((highlight) => (
+                  <li key={highlight}>{highlight}</li>
+                ))}
+              </ul>
+            </section>
+            <section>
+              <h2>Stack</h2>
+              <div className="project-tags">
+                {detail.stack.map((stackItem) => (
+                  <span key={stackItem}>{stackItem}</span>
+                ))}
+              </div>
+            </section>
+            <section>
+              <h2>Result</h2>
+              <p>{detail.result}</p>
+            </section>
+          </div>
+        </section>
+
+        <nav className="project-next" aria-label="更多项目操作">
+          <a href="/#work">查看所有项目</a>
+          <a href="/#contact">联系我</a>
+        </nav>
+      </main>
+    </>
   );
 }
 
@@ -758,6 +928,20 @@ export default function App() {
   useScrollMotion();
   useRevealOnScroll();
   usePreloadWorkImages();
+
+  const path = window.location.pathname.replace(/\/$/, "");
+  const workSlug = path.startsWith("/work/") ? path.slice("/work/".length) : "";
+  const workIndex = workDetails.findIndex((item) => item.slug === workSlug);
+
+  if (workIndex >= 0) {
+    return (
+      <ProjectDetailPage
+        item={workItems[workIndex]}
+        detail={workDetails[workIndex]}
+        itemNumber={String(workIndex + 1).padStart(2, "0")}
+      />
+    );
+  }
 
   return (
     <>
